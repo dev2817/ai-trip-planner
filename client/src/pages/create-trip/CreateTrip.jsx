@@ -1,7 +1,9 @@
+import { tripApi } from '@/apis/authApis';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { AI_PROMPT, selectBudgetOptions, selectTravelersList } from '@/utils/constants';
 import { chatSession } from '@/utils/runGemini';
+import { LoaderCircle } from 'lucide-react';
 import { useState } from 'react'
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete'
 import toast from 'react-hot-toast';
@@ -22,6 +24,10 @@ export default function CreateTrip() {
     const [place, setPlace] = useState({});
     const [formData, setFormData] = useState({})
     const [errors, setErrors] = useState({});
+    const [loading, setLoading] = useState(false);
+
+    const id = "6716192a854ddb1df75f4cfd"
+    console.log(place);
 
     const handleInputChange = (name, value) => {
         setFormData({
@@ -45,10 +51,25 @@ export default function CreateTrip() {
                 .replace('{budget}', formData?.budget)
                 .replace('{traveler}', formData?.traveler)
                 .replace('{noOfDays}', formData?.noOfDays)
-            console.log(finalPrompt);
             const result = await chatSession.sendMessage(finalPrompt)
-            console.log("result", await JSON.parse(result.response.text()));
-
+            const tripData = await JSON.parse(result.response.text())
+            const trip = {
+                userId: id,
+                location: {
+                    name: formData?.location?.label,
+                    placeId: formData?.location?.value?.place_id
+                },
+                noOfDays: formData?.noOfDays,
+                budget: formData?.budget,
+                traveler: formData?.traveler,
+                hotels: tripData?.hotels,
+                itinerary: tripData?.itinerary,
+                bestTimeToVisit: tripData?.bestTimeToVisit
+            }
+            console.log("trip", trip);
+            const response = await tripApi.createTrip(trip)
+            setLoading(false);
+            console.log("backend resp", response);
         } catch (error) {
             if (error instanceof z.ZodError) {
                 const fieldErrors = {};
@@ -56,6 +77,7 @@ export default function CreateTrip() {
                     fieldErrors[e.path[0]] = e.message;
                 });
                 setErrors(fieldErrors);
+                setLoading(false);
                 toast.error("Please fill all the details!")
             }
         }
@@ -148,7 +170,7 @@ export default function CreateTrip() {
 
 
                 <div className="my-10 flex justify-end">
-                    <Button onClick={generateTrip}>Generate Trip</Button>
+                    <Button disabled={loading} onClick={() => { setLoading(true); generateTrip() }}> {loading && <LoaderCircle className='h-y w-7 animate-spin' />} Generate Trip</Button>
                 </div>
             </div>
         </div>

@@ -1,4 +1,5 @@
 import DashboardLayout from '@/layouts/DashboardLayout'
+import TripLayout from '@/layouts/TripLayout'
 import AuthLayout from '@/pages/auth'
 import CompleteProfile from '@/pages/auth/pages/CompleteProfile'
 import ForgotPassword from '@/pages/auth/pages/ForgotPassword'
@@ -8,6 +9,7 @@ import SignIn from '@/pages/auth/pages/SignIn'
 import SignUp from '@/pages/auth/pages/SignUp'
 import CreateTrip from '@/pages/create-trip/CreateTrip'
 import Home from '@/pages/home/Home'
+import Trip from '@/pages/trips/Trip'
 import Trips from '@/pages/trips/Trips'
 import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom'
 
@@ -63,8 +65,18 @@ export default function AppRouter() {
               element: <Navigate to="create-trip" replace />
             },
             {
-              path: "trip",
-              element: <Trips />
+              path: "trips",
+              element: <TripLayout />,
+              children: [
+                {
+                  path: ":tripId",
+                  element: <Trip />
+                },
+                {
+                  path: "",
+                  element: <Trips />
+                },
+              ]
             },
             {
               path: "create-trip",

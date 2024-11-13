@@ -7,7 +7,7 @@ const genAI = new GoogleGenerativeAI(apiKey);
 
 const model = genAI.getGenerativeModel({
     model: "gemini-1.5-pro",
-    systemInstruction: "Generate Travel Plan for Location: Las Vegas, for 3 days for couple with a cheap budget, give me hotels options list with hotelName,  Hotel address, price, hotel image url, geo coordinates, rating, description, and suggest itinerary with placeName, place details, place image Url, geo coordinates, ticket pricing , rating, time travel, each for location for 3 days with each day plan with best time to visit in JSON format",
+    systemInstruction: "Generate Travel Plan for Location: Las Vegas, for 3 days for couple with a cheap budget, give me hotels options list with hotelName,  Hotel address, price, hotel image url, geo coordinates (latitude, longitude object format), rating, description, and suggest itinerary with placeName, place details, place image Url, geo coordinates(latitude, longitude object format), ticket pricing , rating, time travel, each for location for 3 days with each day plan with best time to visit in JSON format",
 });
 
 const generationConfig = {

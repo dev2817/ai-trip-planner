@@ -1,14 +1,79 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mongodb"
   url      = env("DATABASE_URL")
+}
+
+model Trip {
+  id              String    @id @default(auto()) @map("_id") @db.ObjectId
+  userId          String
+  location        Location  @relation(fields: [locationId], references: [id])
+  locationId      String    @unique @db.ObjectId
+  noOfDays        String
+  budget          String
+  traveler        String
+  hotels          Hotel[]
+  itinerary       Itinerary? @relation(fields: [itineraryId], references: [id])
+  itineraryId     String?   @unique @db.ObjectId
+  bestTimeToVisit String? 
+}
+
+model Itinerary {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  dayPlans  DayPlan[]
+  trip      Trip?     @relation
+}
+
+model Location {
+  id      String @id @default(auto()) @map("_id") @db.ObjectId
+  name    String
+  placeId String
+  Trip    Trip?
+}
+
+model Hotel {
+  id             String         @id @default(auto()) @map("_id") @db.ObjectId
+  hotelName      String
+  hotelAddress   String
+  price          String?
+  hotelImageUrls String[]
+  geoCoordinates GeoCoordinates @relation(fields: [geoCoordinatesId], references: [id])
+  geoCoordinatesId String @unique @db.ObjectId
+  rating         String?
+  description    String?
+  Trip           Trip?          @relation(fields: [tripId], references: [id])
+  tripId         String         @db.ObjectId
+}
+
+model GeoCoordinates {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  latitude  Float
+  longitude Float
+  hotel     Hotel?
+  placePlan PlacePlan?
+}
+
+model DayPlan {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  day       Int
+  plan      PlacePlan[]
+  Itinerary Itinerary? @relation(fields: [itineraryId], references: [id])
+  itineraryId String @db.ObjectId
+}
+
+model PlacePlan {
+  id            String         @id @default(auto()) @map("_id") @db.ObjectId
+  placeName     String
+  placeDetails  String
+  placeImageUrls String[]
+  geoCoordinates GeoCoordinates @relation(fields: [geoCoordinatesId], references: [id])
+  geoCoordinatesId String @unique @db.ObjectId
+  ticketPricing String?
+  rating        String?
+  timeTravel    String?
+  DayPlan       DayPlan?       @relation(fields: [dayPlanId], references: [id])
+  dayPlanId     String         @db.ObjectId
 }
