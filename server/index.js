@@ -9,6 +9,8 @@ app.use(cors())
 
 app.use('/api', router)
 
+app.set('trust proxy', true);
+
 const port = process.env.PORT || 5000;
 
 app.listen(port, () => {
