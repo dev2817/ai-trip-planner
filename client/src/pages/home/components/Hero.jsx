@@ -1,7 +1,9 @@
 import { Button } from '@/components/ui/button'
 import { useNavigate } from 'react-router-dom'
-
+import landingImage from "/landing-image-2.jpeg"
+import Footer from '@/pages/trips/components/Footer';
 export default function Hero() {
+
     const navigate = useNavigate();
     return (
         <div
@@ -17,6 +19,12 @@ export default function Hero() {
             <Button onClick={() => { navigate('/dashboard') }}>
                 Get Started, Its Free
             </Button>
+            <div className='p-10 mt-5 md:px-20 lg:px-44 xl:px-60'>
+                <img src={landingImage} alt="laptop"
+                    className='h-full w-full rounded-xl'
+                />
+            </div>
+            <Footer />
         </div>
     )
 }

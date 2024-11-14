@@ -8,7 +8,7 @@ import "./GoogleButton.css"
 import { useNavigate } from "react-router-dom";
 
 export default function GoogleButton({ name }) {
-    const { ipAddress, projectCode, projectRole } = useAuth();
+    const { ipAddress, projectCode,successNavigate, projectRole } = useAuth();
     const [userData, setUserData] = useState({
         googleUid: "",
         name: "",
@@ -53,11 +53,14 @@ export default function GoogleButton({ name }) {
 
             const response = await authApi.signWithGoogle(userDetails);
             if (response.data.success) {
-                if (!response.data.completeProfile) {
+                if (response.data.completeProfile === false) {
                     localStorage.setItem('email', user.email)
                     navigate('/auth/complete-profile');
                 }
                 toast.success(response.data.message)
+                localStorage.clear();
+                localStorage.setItem('authtoken', response.data.data)
+                successNavigate()
             }
             else {
                 toast.error(response.data.message)

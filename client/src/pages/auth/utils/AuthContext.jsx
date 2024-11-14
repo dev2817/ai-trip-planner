@@ -7,7 +7,7 @@ export const AuthProvider = ({ children }) => {
 
     const projectCode = import.meta.env.VITE_PROJECTCODE;
     const projectRole = [import.meta.env.VITE_PROJECTROLE];
-    const successNavigateRoute = "/auth/dev";
+    const successNavigateRoute = "/dashboard";
     const navigate = useNavigate();
 
     const [ipAddress, setIpAddress] = useState('');
