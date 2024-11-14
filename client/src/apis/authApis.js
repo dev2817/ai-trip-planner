@@ -38,18 +38,37 @@ export const authApi = {
                 "Authorization": `Bearer ${localStorage.getItem('authtoken')}`
             }
         })
-    }
+    },
+    getUserById: async (userId) => {
+        return await axios.get(`${baseUrl}/getUserById/${userId}`, {
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem('authtoken')}`
+            }
+        })
+    },
 }
 
 export const tripApi = {
     createTrip: async (data) => {
-        return await axios.post(`${backendUrl}/create-trip`, data)
+        return await axios.post(`${backendUrl}/create-trip`, data, {
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem('authtoken')}`
+            }
+        })
     },
     getTripById: async (id) => {
-        return await axios.get(`${backendUrl}/get-trip/${id}`)
+        return await axios.get(`${backendUrl}/get-trip/${id}`, {
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem('authtoken')}`
+            }
+        })
     },
     getUserTrips: async (userId) => {
-        return await axios.get(`${backendUrl}/get-trips-user/${userId}`)
+        return await axios.get(`${backendUrl}/get-trips-user/${userId}`, {
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem('authtoken')}`
+            }
+        })
     },
     getPlaceGoogle: async (data) => {
         return await axios.post(`${googleBaseUrl}/places:searchText`, data, {

@@ -15,7 +15,7 @@ export default function Trip() {
     const getTrip = async () => {
         try {
             const res = await tripApi.getTripById(tripId);
-            if (res.data.success) {                    
+            if (res.data.success) {
                 setTrip(res.data.data)
             }
             else {
@@ -31,16 +31,16 @@ export default function Trip() {
         }
     }
 
-    useEffect(()=>{
-       tripId && getTrip()
-    },[tripId])
+    useEffect(() => {
+        tripId && getTrip()
+    }, [tripId])
 
-    useEffect(()=>{
+    useEffect(() => {
         console.log("effect working");
-        
-    },[])
+
+    }, [])
     return (
-        <div className="p-10 md:px-20 lg:px-44 xl:px-60">
+        <div className="p-10 md:px-20 lg:px-44 xl:px-60 flex-grow">
             <InfoSection trip={trip} />
             <Hotels trip={trip} />
             <PlacesToVisit trip={trip} />

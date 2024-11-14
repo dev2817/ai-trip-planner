@@ -6,6 +6,8 @@ import _ from 'lodash'
 import Button from "../components/button/Button";
 import TextBox from "../components/textBox/TextBox";
 import z from 'zod';
+import { setUserId } from "@/features/userSlice";
+import { useDispatch } from "react-redux";
 
 const completeProfileSchema = z.object({
     username: z.string().min(1, { message: "Username is required" }),
@@ -25,6 +27,7 @@ export default function CompleteProfile() {
     const [checkedData, setCheckedData] = useState();
     const [errors, setErrors] = useState({});
     const { projectCode, ipAddress, successNavigate } = useAuth();
+    const dispatch = useDispatch();
 
     const handleSubmit = async () => {
         const validation = completeProfileSchema.safeParse(userData);
@@ -42,6 +45,7 @@ export default function CompleteProfile() {
                 toast.success(response.data.message)
                 localStorage.clear()
                 localStorage.setItem('authtoken', response.data.data)
+                dispatch(setUserId(response.data.userId));
                 successNavigate()
             }
             else {

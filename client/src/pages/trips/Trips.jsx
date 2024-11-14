@@ -2,14 +2,15 @@ import { tripApi } from "@/apis/authApis";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import TripCard from "./components/TripCard";
+import { useSelector } from "react-redux";
 
 export default function Trips() {
   const [trips, setTrips] = useState([]);
   const [loading, setLoading] = useState(false);
-
+  const userId = useSelector((state) => state.user.userId);
   const getTrips = async () => {
     try {
-      const res = await tripApi.getUserTrips("6716192a854ddb1df75f4cfd")
+      const res = await tripApi.getUserTrips(userId)
       setLoading(false)
       if (res.data.success) {
         setTrips(res.data.data)
@@ -27,10 +28,9 @@ export default function Trips() {
     setLoading(true)
     getTrips()
   }, [])
-  console.log(trips);
 
   return (
-    <div className="p-10 md:px-20 lg:px-44 xl:px-60">
+    <div className="p-10 md:px-20 lg:px-44 xl:px-60 flex-grow">
       <h2 className="font-bold text-3xl">My Trips</h2>
       <div className="grid grid-cols-2 mt-10 md:grid-cols-3 gap-5">
         {trips.length > 0 && !loading ? trips.map((trip, index) => (

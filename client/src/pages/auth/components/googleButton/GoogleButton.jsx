@@ -6,9 +6,11 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import "./GoogleButton.css"
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setUserId } from "@/features/userSlice";
 
 export default function GoogleButton({ name }) {
-    const { ipAddress, projectCode,successNavigate, projectRole } = useAuth();
+    const { ipAddress, projectCode, successNavigate, projectRole } = useAuth();
     const [userData, setUserData] = useState({
         googleUid: "",
         name: "",
@@ -19,6 +21,7 @@ export default function GoogleButton({ name }) {
         ip: ""
     });
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const updateUserData = (
         displayName,
@@ -60,6 +63,7 @@ export default function GoogleButton({ name }) {
                 toast.success(response.data.message)
                 localStorage.clear();
                 localStorage.setItem('authtoken', response.data.data)
+                dispatch(setUserId(response.data.userId));
                 successNavigate()
             }
             else {
@@ -83,7 +87,7 @@ export default function GoogleButton({ name }) {
             projectCode: projectCode,
         })
     }, [projectCode, projectRole, ipAddress])
-    
+
     return (
         <div className="google-signin-container">
             <button className="google-signin-btn" onClick={() => handleGoogleSignIn()}>

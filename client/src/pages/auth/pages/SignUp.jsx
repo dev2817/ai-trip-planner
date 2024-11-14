@@ -20,7 +20,7 @@ const signUpSchema = z.object({
 });
 
 export default function SignUp() {
-  const { projectRole, projectCode, successNavigate } = useAuth();
+  const { projectRole, projectCode } = useAuth();
   const [userData, setUserData] = useState({
     name: "",
     password: "",
@@ -32,7 +32,6 @@ export default function SignUp() {
   });
   const [checkedData, setCheckedData] = useState();
   const [errors, setErrors] = useState({});
-
   const navigate = useNavigate();
 
   const handleChange = (e, fieldName) => {
@@ -93,7 +92,7 @@ export default function SignUp() {
         }
         else {
           toast.success(response.data.message)
-          successNavigate()
+          navigate('/auth/sign-in')
         }
       }
       else {

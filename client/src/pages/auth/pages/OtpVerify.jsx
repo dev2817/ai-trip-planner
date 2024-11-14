@@ -5,6 +5,8 @@ import { useAuth } from "../utils/useAuth";
 import toast from "react-hot-toast";
 import { authApi } from "../../../apis/authApis";
 import { Link, useNavigate } from "react-router-dom";
+import { setUserId } from "@/features/userSlice";
+import { useDispatch } from "react-redux";
 
 export default function OtpVerify() {
   const [verifyData, setVerifyData] = useState({
@@ -17,6 +19,8 @@ export default function OtpVerify() {
   });
   const { projectCode, ipAddress, successNavigate } = useAuth();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const handleOtpChange = (otpValue) => {
     setVerifyData((prevData) => ({
       ...prevData,
@@ -51,6 +55,7 @@ export default function OtpVerify() {
         else {
           localStorage.clear()
           localStorage.setItem('authtoken', response.data.data)
+          dispatch(setUserId(response.data.userId));
           successNavigate()
         }
       }

@@ -7,6 +7,8 @@ import { authApi } from "../../../apis/authApis";
 import toast from "react-hot-toast";
 import z from 'zod';
 import GoogleButton from "../components/googleButton/GoogleButton";
+import { setUserId } from "@/features/userSlice";
+import { useDispatch } from "react-redux";
 
 const signInSchema = z.object({
   name: z.string().min(3, { message: "Username or Email is required" }),
@@ -25,6 +27,7 @@ export default function SignIn() {
   });
   const navigate = useNavigate();
   const [errors, setErrors] = useState({});
+  const dispatch = useDispatch();
 
   const handleChange = (e, fieldName) => {
     const { value } = e.target;
@@ -51,6 +54,7 @@ export default function SignIn() {
         toast.success(response.data.message)
         localStorage.clear();
         localStorage.setItem('authtoken', response.data.data)
+        dispatch(setUserId(response.data.userId));
         successNavigate()
       }
       else {

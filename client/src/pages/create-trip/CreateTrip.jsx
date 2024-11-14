@@ -7,7 +7,9 @@ import { LoaderCircle } from 'lucide-react';
 import { useState } from 'react'
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete'
 import toast from 'react-hot-toast';
+import { useSelector } from 'react-redux';
 import { z } from 'zod'
+import Footer from '../trips/components/Footer';
 
 const tripSchema = z.object({
     location: z
@@ -21,13 +23,10 @@ const tripSchema = z.object({
 });
 
 export default function CreateTrip() {
-    const [place, setPlace] = useState({});
     const [formData, setFormData] = useState({})
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false);
-
-    const id = "6716192a854ddb1df75f4cfd"
-    console.log(place);
+    const userId = useSelector((state) => state.user.userId);
 
     const handleInputChange = (name, value) => {
         setFormData({
@@ -54,7 +53,7 @@ export default function CreateTrip() {
             const result = await chatSession.sendMessage(finalPrompt)
             const tripData = await JSON.parse(result.response.text())
             const trip = {
-                userId: id,
+                userId: userId,
                 location: {
                     name: formData?.location?.label,
                     placeId: formData?.location?.value?.place_id
@@ -100,7 +99,7 @@ export default function CreateTrip() {
                         apiKey={import.meta.env.VITE_GOOGLE_PLACE_API_KEY}
                         selectProps={{
                             place: formData.location,
-                            onChange: (v) => { setPlace(v); handleInputChange("location", v) },
+                            onChange: (v) => { handleInputChange("location", v) },
                             className: errors.location ? 'location-error' : ''
                         }}
                     />
@@ -108,7 +107,6 @@ export default function CreateTrip() {
                         <p className="text-red-500 text-sm mt-1">{errors.location}</p>
                     )}
                 </div>
-
                 <div>
                     <h2 className="text-xl my-3 font-medium">How many days are you planning your trip?</h2>
                     <Input
@@ -120,9 +118,7 @@ export default function CreateTrip() {
                     {errors.noOfDays && (
                         <p className="text-red-500 text-sm mt-1">{errors.noOfDays}</p>
                     )}
-
                 </div>
-
                 <div>
                     <h2 className="text-xl my-3 font-medium">What is your budget?</h2>
                     <div className="grid grid-cols-3 gap-5 mt-5">
@@ -144,8 +140,6 @@ export default function CreateTrip() {
                         <p className="text-red-500 text-sm mt-1">{errors.budget}</p>
                     )}
                 </div>
-
-
                 <div>
                     <h2 className="text-xl my-3 font-medium">Who do you plan on traveling with on your next adventure?</h2>
                     <div className="grid grid-cols-3 gap-5 mt-5">
@@ -167,12 +161,11 @@ export default function CreateTrip() {
                         <p className="text-red-500 text-sm mt-1">{errors.traveler}</p>
                     )}
                 </div>
-
-
                 <div className="my-10 flex justify-end">
                     <Button disabled={loading} onClick={() => { setLoading(true); generateTrip() }}> {loading && <LoaderCircle className='h-y w-7 animate-spin' />} Generate Trip</Button>
                 </div>
             </div>
+            <Footer />
         </div>
     )
 }
