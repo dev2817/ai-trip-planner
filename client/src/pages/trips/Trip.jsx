@@ -5,7 +5,6 @@ import { useNavigate, useParams } from "react-router-dom"
 import InfoSection from "./components/InfoSection";
 import Hotels from "./components/Hotels";
 import PlacesToVisit from "./components/PlacesToVisit";
-import Footer from "./components/Footer";
 
 export default function Trip() {
     const { tripId } = useParams();
@@ -44,7 +43,6 @@ export default function Trip() {
             <InfoSection trip={trip} />
             <Hotels trip={trip} />
             <PlacesToVisit trip={trip} />
-            <Footer />
         </div>
     )
 }

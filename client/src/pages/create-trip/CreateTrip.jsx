@@ -10,6 +10,7 @@ import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 import { z } from 'zod'
 import Footer from '../trips/components/Footer';
+import { useNavigate } from 'react-router-dom';
 
 const tripSchema = z.object({
     location: z
@@ -27,6 +28,7 @@ export default function CreateTrip() {
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false);
     const userId = useSelector((state) => state.user.userId);
+    const navigate = useNavigate();
 
     const handleInputChange = (name, value) => {
         setFormData({
@@ -65,10 +67,15 @@ export default function CreateTrip() {
                 itinerary: tripData?.itinerary,
                 bestTimeToVisit: tripData?.bestTimeToVisit
             }
-            console.log("trip", trip);
             const response = await tripApi.createTrip(trip)
             setLoading(false);
-            console.log("backend resp", response);
+            if (response.data.success) {
+                navigate(`/dashboard/trips/${response.data.data.id}`)
+            }
+            else {
+                console.log(response.data.message);
+                toast.error("Failed to create trip!");
+            }
         } catch (error) {
             if (error instanceof z.ZodError) {
                 const fieldErrors = {};

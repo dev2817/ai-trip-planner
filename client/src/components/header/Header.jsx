@@ -9,6 +9,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { clearUserId } from '@/features/userSlice';
 import { persistor } from '@/store/store';
+import { clearUserData } from '@/features/userDataSlice';
 
 export default function Header() {
   const navigate = useNavigate();
@@ -17,6 +18,7 @@ export default function Header() {
   const userData = useSelector((state) => state.userData);
   const handleLogOut = async () => {
     dispatch(clearUserId());
+    dispatch(clearUserData())
     localStorage.clear();
     persistor.purge();
     navigate('/auth/sign-in')
